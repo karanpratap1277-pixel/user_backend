@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; background-color: #f4f4f9; }
+        .form-container { background: white; padding: 25px; border-radius: 8px; max-width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        #response-msg { margin-top: 15px; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>User Registration</h2>
+    <form id="userForm">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="mobile">Mobile No:</label>
+            <input type="tel" id="mobile" name="mobile" required>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="response-msg"></div>
+</div>
+
+<script>
+    document.getElementById('userForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const mobile = document.getElementById('mobile').value; // Yahan bracket ki jagah parenthesis ')' hai
+        const msgDiv = document.getElementById('response-msg');
+
+        try {
+            const response = await fetch('http://localhost:3000/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, mobile })
+            });
+            const result = await response.json();
+            
+            if (response.ok) {
+                msgDiv.style.color = 'green';
+                msgDiv.textContent = result.message;
+                document.getElementById('userForm').reset();
+            } else {
+                msgDiv.style.color = 'red';
+                msgDiv.textContent = result.error || 'Submission failed!';
+            }
+        } catch (err) {
+            msgDiv.style.color = 'red';
+            msgDiv.textContent = 'Could not connect to the backend server.';
+        }
+    });
+</script>
