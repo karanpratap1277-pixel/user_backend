@@ -30,7 +30,6 @@ pool.query(`
   else console.log('MySQL connected and table verified/created.');
 });
 
-// API Endpoint (POST /api/users)
 app.post('/api/users', (req, res) => {
   const { name, email, mobile } = req.body;
 
@@ -53,7 +52,7 @@ app.post('/api/users', (req, res) => {
   });
 });
 
-// Server Start Karna
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Backend service running on http://localhost:${PORT}`);
